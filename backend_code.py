@@ -5,7 +5,7 @@ from selenium.common.exceptions import TimeoutException
 from selenium import webdriver
 import time
 import pypdf
-from google import genai
+import google.generativeai as genai 
 from selenium.webdriver.chrome.options import Options
 
 
