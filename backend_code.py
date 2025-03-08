@@ -7,27 +7,38 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import time
 import pypdf
-from google import genai 
+# from google import genai 
+import streamlit as st
+import os
+import google.generativeai as genai
 from selenium.webdriver.chrome.options import Options
 
 
 
 def get_linkedin_details(urls, username, password):
-    chrome_options = Options()
-    # chrome_options.add_argument("--headless=new")  # Required for servers
-    chrome_options.add_argument("--no-sandbox")
-    chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options = Options()
+    # # chrome_options.add_argument("--headless=new")  # Required for servers
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
 
-    # Dynamically find Chrome path (for Streamlit's environment)
-    try:
-        chrome_path = subprocess.check_output(["which", "google-chrome"]).decode().strip()
-        chrome_options.binary_location = chrome_path
-    except:
-        st.error("Chrome not found! Check setup.sh")
-        return
+    # # Dynamically find Chrome path (for Streamlit's environment)
+    # try:
+    #     chrome_path = subprocess.check_output(["which", "google-chrome"]).decode().strip()
+    #     chrome_options.binary_location = chrome_path
+    # except:
+    #     st.error("Chrome not found! Check setup.sh")
+    #     return
+    
+
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")  # Run in headless mode
+    chrome_options.add_argument("--no-sandbox")  # Required for cloud environments
+    chrome_options.add_argument("--disable-dev-shm-usage")  # Prevent crashes in Docker
+    driver = webdriver.Chrome(options=chrome_options)
+    driver.get("https://www.google.com")
 
     # Initialize driver
-    driver = webdriver.Chrome(options=chrome_options)
+    # driver = webdriver.Chrome(options=chrome_options)
     
     try:
         # Login process using provided credentials
@@ -139,15 +150,64 @@ def extract_text_from_pdf(pdf_path):
         text = "".join(page.extract_text() or "" for page in reader.pages)
     return text
 
-def query_llm_api(prompt: str):
-    client = genai.Client(api_key="AIzaSyCm-tgMWstlFOrmkHYTXurua0g1jPmuYaA")
+# def query_llm_api(prompt: str):
+#     client = genai.Client(api_key="AIzaSyCm-tgMWstlFOrmkHYTXurua0g1jPmuYaA")
 
-    response = client.models.generate_content(
-        model="gemini-2.0-flash",
-        contents=prompt
-    )
+#     response = client.models.generate_content(
+#         model="gemini-2.0-flash",
+#         contents=prompt
+#     )
 
-    return response.text
+#     return response.text
+
+
+def query_llm_api(prompt: str) -> str:
+    """
+    Get response from Gemini API using the provided prompt
+    WARNING: Hardcoded API keys are insecure - only use for testing
+    """
+    try:
+        # SECURITY NOTE: This exposes your API key in the code
+        api_key = "AIzaSyCm-tgMWstlFOrmkHYTXurua0g1jPmuYaA"  # ⚠️ Your live key here
+        
+        genai.configure(api_key=api_key)
+        model = genai.GenerativeModel('gemini-2.0-flash')
+        response = model.generate_content(prompt)
+        return response.text
+    
+    except Exception as e:
+        return f"Error generating response: {str(e)}"
+
+# def query_llm_api(prompt: str) -> str:
+#     """
+#     Get response from Gemini API using the provided prompt
+    
+#     Args:
+#         prompt: User input prompt
+    
+#     Returns:
+#         Generated response as string
+#     """
+#     try:
+#         # Get API key from environment variable (never hardcode in production)
+#         api_key = os.getenv("AIzaSyCm-tgMWstlFOrmkHYTXurua0g1jPmuYaA")
+        
+#         if not api_key:
+#             raise ValueError("GOOGLE_API_KEY environment variable not set")
+        
+#         # Configure the API key properly
+#         genai.configure(api_key=api_key)
+        
+#         # Create model instance with specified model
+#         model = genai.GenerativeModel('gemini-2.0-flash')
+        
+#         # Generate response
+#         response = model.generate_content(prompt)
+        
+#         return response.text
+    
+#     except Exception as e:
+#         return f"Error generating response: {str(e)}"
 
 
 ### GENERATING PERSONALISE EMAIL
