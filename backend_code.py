@@ -23,8 +23,8 @@ def get_linkedin_details(urls, username, password):
     chrome_options.binary_location = '/usr/bin/chromium-browser'
 
     # Configure driver with Service object
-    service = Service(executable_path='/usr/bin/chromedriver')
-    driver = webdriver.Chrome(service=service, options=chrome_options)
+    # service = Service(executable_path='/usr/bin/chromedriver')
+    driver = webdriver.Chrome()
     
     try:
         # Login process using provided credentials
