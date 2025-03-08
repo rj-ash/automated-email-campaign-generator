@@ -7,24 +7,27 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import time
 import pypdf
-import google.generativeai as genai 
+from google import genai 
 from selenium.webdriver.chrome.options import Options
 
 
 
-
 def get_linkedin_details(urls, username, password):
-    """Modified to accept credentials as arguments"""
     chrome_options = Options()
-    chrome_options.add_argument("--headless=new")
+    # chrome_options.add_argument("--headless=new")  # Required for servers
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-gpu")
-    chrome_options.binary_location = '/usr/bin/chromium-browser'
 
-    # Configure driver with Service object
-    # service = Service(executable_path='/usr/bin/chromedriver')
-    driver = webdriver.Chrome()
+    # Dynamically find Chrome path (for Streamlit's environment)
+    try:
+        chrome_path = subprocess.check_output(["which", "google-chrome"]).decode().strip()
+        chrome_options.binary_location = chrome_path
+    except:
+        st.error("Chrome not found! Check setup.sh")
+        return
+
+    # Initialize driver
+    driver = webdriver.Chrome(options=chrome_options)
     
     try:
         # Login process using provided credentials

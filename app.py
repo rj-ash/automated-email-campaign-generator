@@ -24,8 +24,8 @@ st.set_page_config(
 st.markdown("""
 <style>
     .stTextInput input, .stTextInput input:focus {
-        background-color: #f0f2f6;
-        border: 1px solid #0077b5;
+        background-color: #444444;
+        border: 1px solid black;
     }
     .stButton button {
         background-color: #0077b5;
@@ -34,14 +34,39 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+
 def login_form():
     """Display LinkedIn login form"""
+    
+    # Custom CSS for high contrast input fields
+    st.markdown("""
+        <style>
+            /* Styling input fields for contrast */
+            input[type="text"], input[type="password"] {
+                background-color: #262730;
+                color: white !important;
+                border: 1px solid white !important;
+                padding: 8px;
+                font-size: 16px;
+                border-radius: 10px;
+            }
+            
+            /* Styling the form background for better visibility */
+            div[data-testid="stForm"] {
+                background-color: #262730;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
     with st.form("LinkedIn Login"):
         st.subheader("LinkedIn Authentication")
         email = st.text_input("LinkedIn Email")
         password = st.text_input("LinkedIn Password", type="password")
         submitted = st.form_submit_button("Login")
-        
+
         if submitted:
             if email and password:
                 st.session_state.li_email = email
@@ -185,7 +210,7 @@ if st.session_state.generated_emails:
                     st.toast("📋 Email copied to clipboard!", icon="✅")
                 
                 # Email client button
-                mailto_link = f"mailto:?subject={quote(subject)}&body={quote(body_text)}"
+                mailto_link = f"mailto:?body={quote(body_text)}"
                 st.markdown(
                     f'<a href="{mailto_link}" target="_blank" style="text-decoration: none;">'
                     f'<button style="width: 100%; padding: 0.5rem; margin-top: 1rem;">📧 Open in Email</button>'
@@ -210,19 +235,24 @@ with st.expander("🔒 Security Note", expanded=False):
 with st.expander("📚 How to Use", expanded=False):
     st.markdown("""
     **Step-by-Step Guide:**
-    1. **Input LinkedIn Profiles**  
+    1. **Authenticate with Your LinkedIn Credentials**  
+       - Enter your LinkedIn email and password in the login form, this ensures the tool can fetch accurate profile information.
+        - 🔒 Note: Your credentials are not stored or shared with any third party—they are only used during the session.
+    2. **Input LinkedIn Profiles**  
        - Enter single URL or upload CSV/Excel with multiple URLs
-    2. **Upload Product PDF**  
+    3. **Upload Product PDF**  
        - Include detailed product/service information
-    3. **Generate Campaigns**  
+    4. **Generate Campaigns**  
        - Click the 'Generate' button to create emails
-    4. **Review & Export**  
+    5. **Review & Export**  
        - Copy emails or open directly in your email client
     
     **Tips for Best Results:**
     - Use PDFs with clear product USPs and benefits
     - Ensure LinkedIn URLs are public profiles
     - Review generated emails before sending
+                
+                
     """)
 
 def clear_session():
