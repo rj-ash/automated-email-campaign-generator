@@ -1,0 +1,12 @@
+version: '3.8'
+
+services:
+  linkedin-campaign-generator:
+    build: .
+    container_name: linkedin-campaign-generator
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+    environment:
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
