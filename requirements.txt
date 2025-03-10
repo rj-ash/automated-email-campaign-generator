@@ -11,3 +11,4 @@ openpyxl
 mdurl
 Pygments
 rich
+python-dotenv
