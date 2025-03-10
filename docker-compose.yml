@@ -9,7 +9,7 @@
 #     volumes:
 #       - .:/app
 #     environment:
-#       - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+#       - GEMINI_API_KEY=${GEMINI_API_KEY}
 
 
 # version: '3.8'
@@ -21,6 +21,6 @@ services:
     ports:
       - "8501:8501"
     environment:
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
     shm_size: '2gb'  # Fix "DevToolsActivePort" errors
     privileged: true  # Required for Chrome sandboxing
