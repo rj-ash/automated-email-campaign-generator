@@ -152,7 +152,6 @@ def query_llm_api(prompt: str) -> str:
     WARNING: Hardcoded API keys are insecure - only use for testing
     """
     try:
-        # SECURITY NOTE: This exposes your API key in the code
         api_key = os.getenv("GEMINI_API_KEY")
         
         genai.configure(api_key=api_key)
