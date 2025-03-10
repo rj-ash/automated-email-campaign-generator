@@ -7,11 +7,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 import time
 import pypdf
-# from google import genai 
+from webdriver_manager.chrome import ChromeDriverManager
 import streamlit as st
 import os
 import google.generativeai as genai
-from selenium.webdriver.chrome.options import Options
 
 
 
@@ -30,15 +29,19 @@ def get_linkedin_details(urls, username, password):
     #     return
     
 
-    chrome_options = Options()
-    chrome_options.add_argument("--headless")  # Run in headless mode
-    chrome_options.add_argument("--no-sandbox")  # Required for cloud environments
-    chrome_options.add_argument("--disable-dev-shm-usage")  # Prevent crashes in Docker
-    driver = webdriver.Chrome(options=chrome_options)
-    driver.get("https://www.google.com")
+    chrome_options = webdriver.ChromeOptions()
+    chrome_options.add_argument("--headless=new")  # Use new headless mode
+    chrome_options.add_argument("--no-sandbox")
+    chrome_options.add_argument("--disable-dev-shm-usage")
+    chrome_options.add_argument("--disable-gpu")
+    chrome_options.add_argument("--disable-extensions")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    driver = webdriver.Chrome(service=Service('/usr/bin/chromedriver'), options=chrome_options)
 
     # Initialize driver
-    # driver = webdriver.Chrome(options=chrome_options)
+    driver.get("https://www.google.com")
+
+
     
     try:
         # Login process using provided credentials
